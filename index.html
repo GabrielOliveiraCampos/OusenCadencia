@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ousen | Cadência Anti No-Show</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#050505;
+      --bg-2:#0A0A0A;
+      --bg-3:#101010;
+      --card:#121212;
+      --card-2:#171717;
+      --line:rgba(255,255,255,0.08);
+      --line-2:rgba(255,255,255,0.14);
+      --text:#F5F5F5;
+      --muted:#BDBDBD;
+      --muted-2:#8D8D8D;
+      --orange:#F36A21;
+      --orange-2:#FF7D39;
+      --orange-soft:rgba(243,106,33,0.10);
+      --orange-line:rgba(243,106,33,0.28);
+      --shadow:0 24px 80px rgba(0,0,0,0.45);
+      --radius:24px;
+      --radius-sm:16px;
+      --max:1200px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter',sans-serif;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .container{
+      width:min(var(--max), calc(100% - 48px));
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .grid-wave,
+    .hero-wave{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .hero-wave::before,
+    .hero-wave::after{
+      content:"";
+      position:absolute;
+      left:-10%;
+      width:120%;
+      height:260px;
+      border-top:2px solid rgba(243,106,33,0.65);
+      border-radius:50%;
+      transform:scaleY(.42);
+      filter:drop-shadow(0 0 20px rgba(243,106,33,0.15));
+      opacity:.9;
+    }
+
+    .hero-wave::before{bottom:24%;}
+    .hero-wave::after{bottom:11%;}
+
+    .hero-wave .line,
+    .grid-wave .line{
+      position:absolute;
+      left:-8%;
+      width:116%;
+      height:220px;
+      border-top:1px solid rgba(243,106,33,0.55);
+      border-radius:50%;
+      transform:scaleY(.46);
+      opacity:.85;
+    }
+
+    .hero-wave .line:nth-child(1){bottom:20%}
+    .hero-wave .line:nth-child(2){bottom:17%}
+    .hero-wave .line:nth-child(3){bottom:14%}
+    .hero-wave .line:nth-child(4){bottom:11%}
+    .hero-wave .line:nth-child(5){bottom:8%}
+    .hero-wave .line:nth-child(6){bottom:5%}
+    .hero-wave .line:nth-child(7){bottom:2%}
+
+    .grid-wave .line{height:190px;transform:scaleY(.52);opacity:.5}
+    .grid-wave .line:nth-child(1){bottom:22%}
+    .grid-wave .line:nth-child(2){bottom:16%}
+    .grid-wave .line:nth-child(3){bottom:10%}
+    .grid-wave .line:nth-child(4){bottom:4%}
+
+    .noise{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.05;
+      background-image:radial-gradient(circle at 20% 20%, #fff 0.5px, transparent 0.5px);
+      background-size:14px 14px;
+      mix-blend-mode:soft-light;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:30;
+      backdrop-filter:blur(18px);
+      background:rgba(5,5,5,0.82);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav{
+      min-height:88px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:24px;
+    }
+
+    .nav-logo img{height:48px;width:auto}
+
+    .nav-links{
+      display:flex;
+      gap:34px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .nav-links a{
+      color:#F3F3F3;
+      font-weight:700;
+      font-size:1.02rem;
+      transition:.2s ease;
+    }
+
+    .nav-links a:hover{color:var(--orange)}
+
+    .nav-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .icon-btn{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,0.02);
+      color:#fff;
+      font-size:1.05rem;
+    }
+
+    .hero{
+      position:relative;
+      padding:90px 0 84px;
+      overflow:hidden;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto 0 0 0;
+      height:62%;
+      background:radial-gradient(circle at center, rgba(243,106,33,0.14) 0%, rgba(243,106,33,0.05) 28%, transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero-topline{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      border:1px solid var(--orange-line);
+      background:var(--orange-soft);
+      color:var(--orange-2);
+      border-radius:999px;
+      font-size:.82rem;
+      letter-spacing:.14em;
+      font-weight:700;
+      text-transform:uppercase;
+      margin-bottom:28px;
+    }
+
+    .hero-topline::before{
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--orange);
+      box-shadow:0 0 18px var(--orange);
+    }
+
+    .hero h1{
+      font-family:'Syne',sans-serif;
+      font-size:clamp(2.8rem, 7vw, 6rem);
+      line-height:.96;
+      letter-spacing:-.05em;
+      max-width:1050px;
+      margin-bottom:26px;
+    }
+
+    .hero h1 .muted{color:#C9C9C9;font-weight:500}
+    .hero h1 .accent{color:#fff;font-weight:800}
+    .hero h1 .outline{-webkit-text-stroke:1px rgba(255,255,255,0.20);color:transparent}
+
+    .hero p{
+      max-width:780px;
+      font-size:clamp(1rem, 2vw, 1.3rem);
+      color:var(--muted);
+      margin-bottom:34px;
+    }
+
+    .hero-cta{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:42px;
+    }
+
+    .btn{
+      min-height:62px;
+      padding:0 28px;
+      border-radius:18px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:800;
+      letter-spacing:-.02em;
+      transition:.22s ease;
+      border:1px solid transparent;
+    }
+
+    .btn-primary{
+      background:#fff;
+      color:#080808;
+      box-shadow:0 16px 40px rgba(255,255,255,0.08);
+    }
+
+    .btn-primary:hover{transform:translateY(-2px)}
+
+    .btn-secondary{
+      border-color:var(--line-2);
+      color:#fff;
+      background:rgba(255,255,255,0.02);
+    }
+
+    .btn-secondary:hover{
+      border-color:var(--orange-line);
+      background:var(--orange-soft);
+      transform:translateY(-2px);
+    }
+
+    .hero-cards{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:16px;
+      max-width:950px;
+    }
+
+    .stat-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:24px;
+      backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);
+    }
+
+    .stat-card strong{
+      display:block;
+      font-size:2.2rem;
+      line-height:1;
+      color:#fff;
+      margin-bottom:8px;
+      font-family:'Syne',sans-serif;
+      letter-spacing:-.04em;
+    }
+
+    .stat-card span{color:var(--muted);font-size:.95rem}
+
+    section{
+      position:relative;
+      padding:96px 0;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      overflow:hidden;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+      color:var(--orange);
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-weight:800;
+      font-size:.78rem;
+    }
+
+    .section-head::after{
+      content:"";
+      width:44px;
+      height:1px;
+      background:var(--orange-line);
+    }
+
+    h2{
+      font-family:'Syne',sans-serif;
+      font-size:clamp(2rem, 5.3vw, 4.5rem);
+      line-height:.97;
+      letter-spacing:-.05em;
+      margin-bottom:18px;
+      max-width:900px;
+    }
+
+    h2 .accent{color:var(--orange)}
+    .section-desc{
+      max-width:760px;
+      color:var(--muted);
+      font-size:1.04rem;
+    }
+
+    .intro-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:28px;
+      margin-top:42px;
+      align-items:start;
+    }
+
+    .glass,
+    .card,
+    .step-card,
+    .script-card,
+    .error-card,
+    .check-item{
+      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.025));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .glass{
+      padding:28px;
+      border-radius:var(--radius);
+    }
+
+    .lead-quote{
+      font-size:1.22rem;
+      line-height:1.7;
+      color:#fff;
+      border-left:3px solid var(--orange);
+      padding-left:20px;
+      margin-bottom:22px;
+    }
+
+    .glass p + p{margin-top:14px;color:var(--muted)}
+
+    .toc-card{
+      border-radius:var(--radius);
+      overflow:hidden;
+    }
+
+    .toc-top{
+      padding:22px 24px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background:rgba(243,106,33,0.08);
+      color:#fff;
+      font-weight:800;
+    }
+
+    .toc-top .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--orange);
+      box-shadow:0 0 18px var(--orange);
+    }
+
+    .toc-list{
+      padding:14px 24px 22px;
+      list-style:none;
+    }
+
+    .toc-list li{
+      display:flex;
+      gap:14px;
+      padding:14px 0;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      color:var(--muted);
+    }
+
+    .toc-list li:last-child{border-bottom:none}
+
+    .toc-list li span:first-child{
+      color:var(--orange);
+      min-width:28px;
+      font-weight:800;
+    }
+
+    .problem-grid,
+    .pillar-grid,
+    .errors-grid,
+    .scripts-grid,
+    .check-grid{
+      display:grid;
+      gap:18px;
+      margin-top:42px;
+    }
+
+    .problem-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+    .pillar-grid{grid-template-columns:repeat(4, minmax(0,1fr))}
+    .errors-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+    .scripts-grid{grid-template-columns:1fr}
+    .check-grid{grid-template-columns:1fr}
+
+    .card{
+      border-radius:24px;
+      padding:26px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0 auto auto 0;
+      width:100%;
+      height:2px;
+      background:linear-gradient(90deg, var(--orange), transparent 60%);
+      opacity:.7;
+    }
+
+    .card h3{
+      font-size:1.15rem;
+      margin-bottom:10px;
+      letter-spacing:-.03em;
+    }
+
+    .card p{color:var(--muted);font-size:.97rem}
+
+    .quote-block{
+      margin-top:38px;
+      padding:34px;
+      border-radius:30px;
+      background:linear-gradient(135deg, rgba(243,106,33,0.10), rgba(255,255,255,0.02));
+      border:1px solid var(--orange-line);
+      max-width:960px;
+    }
+
+    .quote-block p{
+      font-size:clamp(1.2rem, 2.6vw, 2rem);
+      line-height:1.45;
+      color:#fff;
+      letter-spacing:-.03em;
+    }
+
+    .pillars-note{
+      margin-top:18px;
+      color:var(--muted);
+      max-width:860px;
+    }
+
+    .pillar{
+      padding:26px 22px 22px;
+      border-radius:24px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .pillar .num{
+      position:absolute;
+      top:12px;
+      right:18px;
+      font-size:3rem;
+      line-height:1;
+      font-family:'Syne',sans-serif;
+      font-weight:800;
+      color:rgba(243,106,33,0.14);
+    }
+
+    .pillar h3{margin-bottom:10px;font-size:1.18rem}
+    .pillar p{color:var(--muted);font-size:.96rem}
+
+    .timeline{
+      margin-top:48px;
+      display:flex;
+      flex-direction:column;
+      gap:28px;
+    }
+
+    .step-card{
+      border-radius:30px;
+      padding:32px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .step-card::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:4px;
+      background:linear-gradient(180deg, var(--orange), transparent);
+    }
+
+    .step-top{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:22px;
+      align-items:start;
+      margin-bottom:22px;
+    }
+
+    .step-number{
+      width:84px;
+      height:84px;
+      border-radius:24px;
+      display:grid;
+      place-items:center;
+      font-family:'Syne',sans-serif;
+      font-size:1.7rem;
+      font-weight:800;
+      color:#fff;
+      background:linear-gradient(135deg, rgba(243,106,33,0.24), rgba(243,106,33,0.08));
+      border:1px solid var(--orange-line);
+    }
+
+    .step-overline{
+      color:var(--orange);
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:.76rem;
+      font-weight:800;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .step-title{
+      font-family:'Syne',sans-serif;
+      font-size:clamp(1.5rem, 3vw, 2.4rem);
+      line-height:1;
+      letter-spacing:-.04em;
+      margin-bottom:10px;
+    }
+
+    .step-time{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      color:#D6D6D6;
+      font-size:.86rem;
+      background:rgba(255,255,255,0.03);
+    }
+
+    .step-time::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--orange);
+    }
+
+    .step-meta-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    .mini-card{
+      background:rgba(255,255,255,0.03);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
+    }
+
+    .mini-card span{
+      display:block;
+      color:var(--orange);
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.74rem;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .mini-card p{color:var(--muted);font-size:.95rem}
+
+    .script-card{
+      border-radius:24px;
+      overflow:hidden;
+      margin-top:18px;
+    }
+
+    .script-bar{
+      padding:16px 20px;
+      background:rgba(243,106,33,0.08);
+      border-bottom:1px solid var(--orange-line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .script-label{
+      color:#fff;
+      font-size:.82rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .script-time{color:var(--orange-2);font-size:.82rem;font-weight:700}
+
+    .script-body{
+      padding:24px;
+      color:#F5F5F5;
+      font-size:1rem;
+      line-height:1.85;
+      background:#0A0A0A;
+      white-space:pre-line;
+    }
+
+    .script-body strong{color:var(--orange-2)}
+
+    .error-card{
+      margin-top:16px;
+      border-radius:22px;
+      padding:18px 20px;
+      border:1px solid rgba(255,95,95,0.18);
+      background:rgba(255,70,70,0.05);
+      color:#F4CFCF;
+    }
+
+    .error-card strong{display:block;color:#FF8B8B;margin-bottom:6px}
+
+    .scripts-grid .script-card{margin-top:0}
+
+    .error-box{
+      border-radius:24px;
+      padding:26px;
+    }
+
+    .error-box h3{margin-bottom:10px;font-size:1.08rem}
+    .error-box p{color:var(--muted)}
+
+    .check-item{
+      border-radius:22px;
+      padding:18px 20px;
+      display:flex;
+      align-items:flex-start;
+      gap:14px;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .check-item:hover{border-color:var(--orange-line)}
+
+    .checkbox{
+      width:22px;
+      height:22px;
+      border-radius:8px;
+      border:1px solid var(--orange-line);
+      display:grid;
+      place-items:center;
+      flex-shrink:0;
+      margin-top:2px;
+      background:rgba(255,255,255,0.03);
+    }
+
+    .check-item.done .checkbox{
+      background:var(--orange);
+      border-color:var(--orange);
+      color:#111;
+      font-weight:900;
+    }
+
+    .check-item.done p{
+      text-decoration:line-through;
+      color:var(--muted-2);
+    }
+
+    .closing-card{
+      max-width:920px;
+      border-radius:30px;
+      padding:38px;
+      background:linear-gradient(135deg, rgba(243,106,33,0.14), rgba(255,255,255,0.03));
+      border:1px solid var(--orange-line);
+      margin-top:30px;
+    }
+
+    .closing-card p{
+      color:#F1F1F1;
+      font-size:1.08rem;
+    }
+
+    .cta{
+      padding:110px 0;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cta::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at center, rgba(243,106,33,0.18), transparent 60%);
+      pointer-events:none;
+    }
+
+    .cta-box{
+      position:relative;
+      z-index:2;
+      text-align:center;
+      border-radius:32px;
+      padding:52px 24px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+
+    .cta-badge{
+      display:inline-flex;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid var(--orange-line);
+      color:var(--orange-2);
+      background:var(--orange-soft);
+      text-transform:uppercase;
+      font-size:.8rem;
+      letter-spacing:.14em;
+      font-weight:800;
+      margin-bottom:20px;
+    }
+
+    .cta-box h2{margin-inline:auto;max-width:880px}
+    .cta-box p{max-width:720px;margin:0 auto 30px;color:var(--muted);font-size:1.05rem}
+
+    .cta-proof{
+      margin-top:32px;
+      display:flex;
+      justify-content:center;
+      gap:28px;
+      flex-wrap:wrap;
+    }
+
+    .cta-proof div strong{
+      display:block;
+      color:var(--orange);
+      font-family:'Syne',sans-serif;
+      font-size:2rem;
+      line-height:1;
+      margin-bottom:6px;
+    }
+
+    .cta-proof div span{color:var(--muted);font-size:.92rem}
+
+    footer{
+      padding:34px 0 42px;
+      border-top:1px solid rgba(255,255,255,0.06);
+      background:#070707;
+    }
+
+    .footer-wrap{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .footer-logo img{height:38px;width:auto}
+    .footer-copy{color:var(--muted-2);font-size:.92rem}
+
+    @media (max-width: 1100px){
+      .pillar-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+    }
+
+    @media (max-width: 900px){
+      .nav{padding:18px 0;min-height:auto;flex-direction:column}
+      .nav-links{gap:18px}
+      .intro-grid,
+      .problem-grid,
+      .errors-grid,
+      .step-meta-grid{grid-template-columns:1fr}
+      .hero-cards{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 700px){
+      .container{width:min(var(--max), calc(100% - 28px))}
+      section{padding:72px 0}
+      .hero{padding:74px 0 70px}
+      .step-card{padding:22px}
+      .step-top{grid-template-columns:1fr}
+      .step-number{width:70px;height:70px;border-radius:20px}
+      .btn{width:100%}
+      .hero-cta{flex-direction:column}
+      .pillar-grid{grid-template-columns:1fr}
+      .quote-block,
+      .closing-card,
+      .glass,
+      .card,
+      .cta-box{padding:22px}
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header>
+    <div class="container nav">
+      <a href="#top" class="nav-logo">
+        <img src="ousenlogo.png" alt="Ousen">
+      </a>
+
+      <nav class="nav-links">
+        <a href="#intro">Início</a>
+        <a href="#problema">Problema</a>
+        <a href="#cadencia">Cadência</a>
+        <a href="#scripts">Scripts</a>
+        <a href="#checklist">Checklist</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="icon-btn" href="https://www.instagram.com/" target="_blank" aria-label="Instagram">◎</a>
+        <a class="icon-btn" href="https://wa.me/" target="_blank" aria-label="WhatsApp">◔</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-wave">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+      <div class="container">
+        <span class="hero-topline">Cadência oficial Ousen · Anti No-Show</span>
+        <h1>
+          <span class="muted">Transforme reunião marcada em</span><br>
+          <span class="accent">reunião realizada</span><br>
+          <span class="muted">com uma cadência que</span> <span class="outline">gera compromisso</span>
+        </h1>
+        <p>
+          Esta página traduz a cadência da Ousen para um material visual, direto e aplicável. O objetivo é simples: reduzir faltas, elevar a percepção de autoridade e fazer o lead chegar na reunião com contexto, expectativa e comprometimento real.
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#cadencia">QUERO VER A CADÊNCIA COMPLETA</a>
+          <a class="btn btn-secondary" href="#scripts">CONFERIR SCRIPTS PRONTOS</a>
+        </div>
+
+        <div class="hero-cards">
+          <div class="stat-card">
+            <strong>07</strong>
+            <span>etapas estruturadas do agendamento ao início da sessão</span>
+          </div>
+          <div class="stat-card">
+            <strong>03</strong>
+            <span>pilares psicológicos centrais: autoridade, antecipação e compromisso</span>
+          </div>
+          <div class="stat-card">
+            <strong>01</strong>
+            <span>objetivo principal: diminuir no-show e elevar presença qualificada</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="intro">
+      <div class="container">
+        <div class="section-head">00 · Introdução</div>
+        <h2>A REUNIÃO FOI AGENDADA.<br><span class="accent">AGORA ELA PRECISA ACONTECER.</span></h2>
+        <p class="section-desc">
+          No-show não é azar. No-show é falha de construção de compromisso. Quando a comunicação entre SDR, especialista e lead é desenhada com autoridade e timing, a taxa de presença sobe porque o encontro deixa de ser um “lembrete na agenda” e passa a ser um compromisso relevante.
+        </p>
+
+        <div class="intro-grid">
+          <div class="glass">
+            <p class="lead-quote">A cadência da Ousen foi pensada para diminuir atrito, aumentar percepção de valor e mostrar que existe preparação real acontecendo antes mesmo da reunião começar.</p>
+            <p>O ponto de partida é claro: o grupo de WhatsApp nasce durante a ligação, não depois. Isso muda tudo, porque a entrada do lead acontece sob supervisão do SDR e já com contexto estratégico.</p>
+            <p>Depois disso, cada mensagem tem função específica: ativar autoridade, elevar o fator de antecipação, humanizar o processo, facilitar o acesso e garantir presença até o minuto exato da sessão.</p>
+          </div>
+
+          <div class="toc-card glass">
+            <div class="toc-top">
+              <span class="dot"></span>
+              <span>O que você vai encontrar aqui</span>
+            </div>
+            <ul class="toc-list">
+              <li><span>01</span><span>O problema real por trás do no-show</span></li>
+              <li><span>02</span><span>Os pilares da cadência da Ousen</span></li>
+              <li><span>03</span><span>As 7 etapas completas, com objetivo e racional</span></li>
+              <li><span>04</span><span>Todos os scripts prontos para aplicação</span></li>
+              <li><span>05</span><span>Erros que sabotam presença e percepção</span></li>
+              <li><span>06</span><span>Checklist final de ativação do processo</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="problema">
+      <div class="grid-wave">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+      <div class="container">
+        <div class="section-head">01 · O problema</div>
+        <h2>REUNIÃO MARCADA<br>NÃO SIGNIFICA<br><span class="accent">REUNIÃO ACONTECIDA</span></h2>
+        <p class="section-desc">
+          O pipeline pode parecer cheio, a agenda pode parecer saudável, mas toda operação comercial perde previsibilidade quando as reuniões não acontecem. O custo não é só um horário vago. É energia, contexto, tempo do especialista e oportunidade desperdiçada.
+        </p>
+
+        <div class="quote-block">
+          <p>Quando o lead falta, não quebra só a agenda. Quebra a percepção de valor, esfria o ciclo e rouba eficiência da operação inteira.</p>
+        </div>
+
+        <div class="problem-grid">
+          <div class="card">
+            <h3>Pipeline inflado</h3>
+            <p>Oportunidades que pareciam avançando deixam o funil artificialmente bonito e escondem um problema real de presença e comprometimento.</p>
+          </div>
+          <div class="card">
+            <h3>Especialista improdutivo</h3>
+            <p>O closer ou especialista reserva horário, prepara material e entra na sala para esperar sozinho. Isso corrói eficiência e aproveitamento da agenda.</p>
+          </div>
+          <div class="card">
+            <h3>Ciclo de venda mais lento</h3>
+            <p>Reagendamentos atrasam o processo, perdem temperatura comercial e reduzem a taxa de conversão do diagnóstico para o próximo passo.</p>
+          </div>
+          <div class="card">
+            <h3>Percepção de valor mais baixa</h3>
+            <p>Quando o processo não transmite importância, o lead passa a tratar a reunião como algo opcional e facilmente substituível.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pilares">
+      <div class="container">
+        <div class="section-head">02 · A lógica da Ousen</div>
+        <h2>OS PILARES QUE SUSTENTAM<br><span class="accent">A CADÊNCIA ANTI NO-SHOW</span></h2>
+        <p class="section-desc">A cadência da Ousen não é só sequência de mensagens. É uma construção progressiva de percepção, valor e compromisso até o momento da reunião.</p>
+        <p class="pillars-note">Ela se apoia principalmente em três grandes frentes: autoridade antecipada, redução de atrito e comprometimento visível.</p>
+
+        <div class="pillar-grid problem-grid" style="grid-template-columns:repeat(4, minmax(0,1fr));">
+          <div class="pillar card">
+            <span class="num">01</span>
+            <h3>Autoridade</h3>
+            <p>O especialista entra cedo na comunicação e deixa de ser um desconhecido. O lead percebe que vai falar com alguém relevante, não só “mais um vendedor”.</p>
+          </div>
+          <div class="pillar card">
+            <span class="num">02</span>
+            <h3>Antecipação</h3>
+            <p>Quando a Ousen comunica que já colocou o cenário do lead em pauta e selecionou cases, a reunião ganha peso e expectativa concreta.</p>
+          </div>
+          <div class="pillar card">
+            <span class="num">03</span>
+            <h3>Compromisso</h3>
+            <p>O grupo é criado durante a ligação, a entrada é confirmada em tempo real e o vínculo começa antes da chamada terminar.</p>
+          </div>
+          <div class="pillar card">
+            <span class="num">04</span>
+            <h3>Baixo atrito</h3>
+            <p>O link chega no grupo, o canal está centralizado e a jornada do lead até entrar na sala fica simples, rápida e natural.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cadencia">
+      <div class="container">
+        <div class="section-head">03 · A cadência completa</div>
+        <h2>AS <span class="accent">7 ETAPAS</span> DO PROCESSO OUSEN</h2>
+        <p class="section-desc">A seguir está a estrutura completa da cadência, com objetivo, racional e script prático para execução.</p>
+
+        <div class="timeline">
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">01</div>
+              <div>
+                <span class="step-overline">Durante a ligação</span>
+                <h3 class="step-title">O AGENDAMENTO COM CRIAÇÃO DO GRUPO EM TEMPO REAL</h3>
+                <span class="step-time">O SDR executa enquanto ainda está com o lead na linha</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Objetivo</span>
+                <p>Garantir adesão total ao grupo e transformar o canal de WhatsApp no ambiente oficial de alinhamento da reunião.</p>
+              </div>
+              <div class="mini-card">
+                <span>Por que funciona</span>
+                <p>O lead entra sob supervisão. Isso aumenta compromisso e elimina a chance de ignorar convite enviado depois.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Script SDR · Agendamento</span>
+                <span class="script-time">T0 · na própria ligação</span>
+              </div>
+              <div class="script-body">“[NOME DO LEAD], como um alinhamento estratégico para facilitar nossa comunicação e garantir transparência, nós criamos um grupo no WhatsApp com você e com o nosso especialista [NOME DO ESPECIALISTA]. Além do convite por e-mail, centralizaremos os materiais e o link de acesso por lá. É este número mesmo que estamos falando que eu adiciono agora?”
+
+Espere ele responder e confirme a entrada no grupo ainda durante a ligação. Se não conseguir adicionar direto, envie o link e só finalize a chamada depois que ele entrar.</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              Criar o grupo só depois que a ligação termina. Isso reduz adesão e devolve ao lead a liberdade de simplesmente ignorar o próximo passo.
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">02</div>
+              <div>
+                <span class="step-overline">Logo após a criação</span>
+                <h3 class="step-title">CONFIGURAÇÃO TÉCNICA DO GRUPO</h3>
+                <span class="step-time">Imediatamente após o lead entrar</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Padrão Ousen</span>
+                <p>Nome do grupo: <strong>Diagnóstico Ousen - [DD/MM] - [Horário] 🚀</strong></p>
+              </div>
+              <div class="mini-card">
+                <span>Estrutura</span>
+                <p>Foto oficial da Ousen, com SDR + especialista + lead no mesmo grupo.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Ajuste operacional</span>
+                <span class="script-time">T+1 min</span>
+              </div>
+              <div class="script-body">Esta etapa não depende de um script principal. Ela depende de padronização.
+
+• Nome curto, direto e focado no benefício do lead.
+• Nada de termos internos.
+• O grupo precisa parecer o início de um alinhamento importante, não um canal improvisado.</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              Usar nome técnico, confuso ou sem benefício claro para o lead. O grupo precisa transmitir relevância imediata.
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">03</div>
+              <div>
+                <span class="step-overline">Ativação e autoridade</span>
+                <h3 class="step-title">PRIMEIRA MENSAGEM DO SDR NO GRUPO</h3>
+                <span class="step-time">Logo após a criação do grupo</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Objetivo</span>
+                <p>Posicionar o especialista, elevar a percepção da reunião e inserir conteúdo de valor com cara de bastidor real da Ousen.</p>
+              </div>
+              <div class="mini-card">
+                <span>Por que funciona</span>
+                <p>Cria contexto, autoridade e faz o lead perceber que a reunião foi desenhada para ajudá-lo a identificar gargalos concretos.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Script SDR · Ativação do grupo</span>
+                <span class="script-time">T+2 min</span>
+              </div>
+              <div class="script-body">“Fala, [Nome do Lead]! Tudo bem?
+
+Grupo criado conforme combinamos. Já adicionei o [NOME DO ESPECIALISTA], que é nosso melhor especialista em estruturação comercial.
+
+Ele conduzirá nosso diagnóstico para identificar os gargalos da sua operação e alinhar como aplicaremos a metodologia Ousen para escalar seus resultados. 🤝
+
+Para você entender na prática os bastidores da nossa operação, vou deixar aqui um episódio do nosso Podcast:
+🎥 [LINK DO PODCAST]
+
+Nos falamos na [Dia da semana] às [Horário]!”</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              Mandar texto institucional genérico ou sem o podcast. A proposta da Ousen aqui é gerar fator UAU e prova de autoridade real.
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">04</div>
+              <div>
+                <span class="step-overline">Validação do especialista</span>
+                <h3 class="step-title">ENTRADA DO CLOSER / ESPECIALISTA NO GRUPO</h3>
+                <span class="step-time">Logo após a mensagem do SDR</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Objetivo</span>
+                <p>Confirmar ao lead que o especialista já está ciente do cenário e que o encontro tem dono, preparo e intencionalidade.</p>
+              </div>
+              <div class="mini-card">
+                <span>Por que funciona</span>
+                <p>Humaniza a reunião e transforma o especialista em presença real antes do diagnóstico acontecer.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Mensagem do especialista</span>
+                <span class="script-time">T+3 min</span>
+              </div>
+              <div class="script-body">“Olá, [Nome do Lead]! Tudo bem?
+
+Será um enorme prazer te apresentar como a Ousen pode ajudar a escalar a operação aí na [NOME DA EMPRESA DO LEAD].
+
+Um grande abraço! Te vejo em breve.”</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              O especialista não aparecer no grupo. Sem isso, a reunião segue parecendo distante e impessoal.
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">05</div>
+              <div>
+                <span class="step-overline">D-1</span>
+                <h3 class="step-title">FOLLOW-UP DE ANTECIPAÇÃO</h3>
+                <span class="step-time">Faltando 1 dia para a reunião</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Objetivo</span>
+                <p>Reforçar expectativa e comunicar que a equipe já colocou o cenário do lead em pauta.</p>
+              </div>
+              <div class="mini-card">
+                <span>Por que funciona</span>
+                <p>O lead sente que existe trabalho acontecendo por trás da reunião. Isso aumenta o peso psicológico do encontro.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Script SDR · Véspera</span>
+                <span class="script-time">D-1</span>
+              </div>
+              <div class="script-body">“[Nome do Lead], tudo certo?
+
+Passando para avisar que estamos ansiosos pelo nosso papo de amanhã às [Horário]. Hoje cedo me reuni com o [NOME DO ESPECIALISTA] e colocamos o seu cenário em pauta.
+
+Selecionamos alguns cases de clientes nossos com resultados exponenciais que se aplicam perfeitamente ao seu modelo. A ideia é te mostrar o que funciona na prática para vocês aplicarem aí também.
+
+Até amanhã!”</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              Trazer a ideia de “imprevisto” ou de remarcação antes de acontecer. A comunicação precisa sustentar compromisso, não abrir saída honrosa para falta.
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">06</div>
+              <div>
+                <span class="step-overline">Dia do diagnóstico</span>
+                <h3 class="step-title">MANHÃ DA REUNIÃO + LINK DE ACESSO</h3>
+                <span class="step-time">Manhã do dia + 1 hora antes</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Objetivo</span>
+                <p>Mostrar preparo real, humanizar o processo e diminuir qualquer fricção de acesso à reunião.</p>
+              </div>
+              <div class="mini-card">
+                <span>Por que funciona</span>
+                <p>A foto do especialista no computador e o envio do link tornam o compromisso visível e concreto para o lead.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Script SDR · Manhã da reunião</span>
+                <span class="script-time">Pela manhã</span>
+              </div>
+              <div class="script-body">“Bom dia, [Nome do Lead]!
+
+Tudo pronto para o nosso compromisso de hoje. O material do seu diagnóstico já está finalizado por aqui.
+
+[FOTO DO ESPECIALISTA NO COMPUTADOR COM O MATERIAL ABERTO]
+
+Pouco antes das [Horário], envio o link de acesso por aqui para facilitar. Até já!”</div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Script SDR · 1 hora antes</span>
+                <span class="script-time">T-1h</span>
+              </div>
+              <div class="script-body">“[NOME DO LEAD], segue o link do nosso compromisso. Iniciamos em instantes!
+🔗 https://meet.google.com/”</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              Enviar sem foto ou mandar o link em cima da hora. O valor dessa etapa está justamente em provar preparo e remover atrito com antecedência suficiente.
+            </div>
+          </article>
+
+          <article class="step-card">
+            <div class="step-top">
+              <div class="step-number">07</div>
+              <div>
+                <span class="step-overline">Na hora exata</span>
+                <h3 class="step-title">INÍCIO DA SESSÃO COM MENSAGEM DO ESPECIALISTA</h3>
+                <span class="step-time">Exatamente no horário marcado</span>
+              </div>
+            </div>
+            <div class="step-meta-grid">
+              <div class="mini-card">
+                <span>Objetivo</span>
+                <p>Reforçar presença imediata na sala e dar ao lead o último empurrão para entrar sem hesitação.</p>
+              </div>
+              <div class="mini-card">
+                <span>Por que funciona</span>
+                <p>Mostra prontidão em tempo real. O especialista está esperando, a reunião começou e o próximo passo natural é entrar.</p>
+              </div>
+            </div>
+            <div class="script-card">
+              <div class="script-bar">
+                <span class="script-label">Mensagem do especialista · hora exata</span>
+                <span class="script-time">T0 da reunião</span>
+              </div>
+              <div class="script-body">“Olá, [Nome do Lead], tudo ótimo?
+
+Estou te aguardando na sala!
+🔗 https://meet.google.com/”</div>
+            </div>
+            <div class="error-card">
+              <strong>Erro crítico</strong>
+              O especialista simplesmente entrar na sala e esperar em silêncio. A mensagem de presença fecha a cadência e reforça urgência elegante.
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="scripts">
+      <div class="container">
+        <div class="section-head">04 · Scripts em sequência</div>
+        <h2>TODOS OS <span class="accent">SCRIPTS</span> PARA COPIAR, ADAPTAR E USAR</h2>
+        <p class="section-desc">Aqui está a sequência condensada da cadência da Ousen em formato rápido de consulta.</p>
+
+        <div class="scripts-grid">
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">01 · Agendamento e entrada no grupo</span>
+              <span class="script-time">Durante a ligação</span>
+            </div>
+            <div class="script-body">“[NOME DO LEAD], como um alinhamento estratégico para facilitar nossa comunicação e garantir transparência, nós criamos um grupo no WhatsApp com você e com o nosso especialista [NOME DO ESPECIALISTA]. Além do convite por e-mail, centralizaremos os materiais e o link de acesso por lá. É este número mesmo que estamos falando que eu adiciono agora?”</div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">02 · Primeira mensagem do SDR</span>
+              <span class="script-time">Após criação do grupo</span>
+            </div>
+            <div class="script-body">“Fala, [Nome do Lead]! Tudo bem?
+
+Grupo criado conforme combinamos. Já adicionei o [NOME DO ESPECIALISTA], que é nosso melhor especialista em estruturação comercial.
+
+Ele conduzirá nosso diagnóstico para identificar os gargalos da sua operação e alinhar como aplicaremos a metodologia Ousen para escalar seus resultados. 🤝
+
+Para você entender na prática os bastidores da nossa operação, vou deixar aqui um episódio do nosso Podcast:
+🎥 [LINK DO PODCAST]
+
+Nos falamos na [Dia da semana] às [Horário]!”</div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">03 · Mensagem do especialista</span>
+              <span class="script-time">Na sequência</span>
+            </div>
+            <div class="script-body">“Olá, [Nome do Lead]! Tudo bem?
+
+Será um enorme prazer te apresentar como a Ousen pode ajudar a escalar a operação aí na [NOME DA EMPRESA DO LEAD].
+
+Um grande abraço! Te vejo em breve.”</div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">04 · Follow-up D-1</span>
+              <span class="script-time">1 dia antes</span>
+            </div>
+            <div class="script-body">“[Nome do Lead], tudo certo?
+
+Passando para avisar que estamos ansiosos pelo nosso papo de amanhã às [Horário]. Hoje cedo me reuni com o [NOME DO ESPECIALISTA] e colocamos o seu cenário em pauta.
+
+Selecionamos alguns cases de clientes nossos com resultados exponenciais que se aplicam perfeitamente ao seu modelo. A ideia é te mostrar o que funciona na prática para vocês aplicarem aí também.
+
+Até amanhã!”</div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">05 · Manhã da reunião</span>
+              <span class="script-time">Dia do diagnóstico</span>
+            </div>
+            <div class="script-body">“Bom dia, [Nome do Lead]!
+
+Tudo pronto para o nosso compromisso de hoje. O material do seu diagnóstico já está finalizado por aqui.
+
+[FOTO DO ESPECIALISTA NO COMPUTADOR COM O MATERIAL ABERTO]
+
+Pouco antes das [Horário], envio o link de acesso por aqui para facilitar. Até já!”</div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">06 · Link 1 hora antes</span>
+              <span class="script-time">T-1h</span>
+            </div>
+            <div class="script-body">“[NOME DO LEAD], segue o link do nosso compromisso. Iniciamos em instantes!
+🔗 https://meet.google.com/”</div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-bar">
+              <span class="script-label">07 · Mensagem de abertura do especialista</span>
+              <span class="script-time">Na hora exata</span>
+            </div>
+            <div class="script-body">“Olá, [Nome do Lead], tudo ótimo?
+
+Estou te aguardando na sala!
+🔗 https://meet.google.com/”</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="erros">
+      <div class="container">
+        <div class="section-head">05 · Erros que sabotam</div>
+        <h2>O QUE FAZ O NO-SHOW<br><span class="accent">CONTINUAR ACONTECENDO</span></h2>
+        <p class="section-desc">Mesmo com um bom processo, alguns erros operacionais derrubam a taxa de presença. Estes são os principais.</p>
+
+        <div class="errors-grid">
+          <div class="error-box card">
+            <h3>Criar o grupo depois da ligação</h3>
+            <p>Sem acompanhamento em tempo real, o lead pode ignorar o convite e o compromisso já nasce fraco.</p>
+          </div>
+          <div class="error-box card">
+            <h3>Nome de grupo técnico ou frio</h3>
+            <p>Quando o grupo não comunica benefício e contexto, ele parece apenas mais um canal operacional.</p>
+          </div>
+          <div class="error-box card">
+            <h3>Texto institucional no lugar de prova real</h3>
+            <p>O podcast e os bastidores geram mais autoridade do que uma apresentação genérica da empresa.</p>
+          </div>
+          <div class="error-box card">
+            <h3>Especialista ausente do processo</h3>
+            <p>Sem a validação do closer, o lead não sente a presença humana e estratégica da reunião.</p>
+          </div>
+          <div class="error-box card">
+            <h3>Falar em “imprevisto” antes da hora</h3>
+            <p>Isso abre uma saída confortável para a falta. A reunião precisa soar importante e inadiável.</p>
+          </div>
+          <div class="error-box card">
+            <h3>Não enviar foto ou link com antecedência</h3>
+            <p>Sem prova de preparo e sem acesso facilitado, o encontro perde força exatamente no momento decisivo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="checklist">
+      <div class="container">
+        <div class="section-head">06 · Checklist final</div>
+        <h2>ANTES DE COLOCAR<br><span class="accent">A CADÊNCIA PARA RODAR</span></h2>
+        <p class="section-desc">Use esse checklist para validar se a operação está pronta para aplicar a cadência da Ousen com consistência.</p>
+
+        <div class="check-grid">
+          <div class="check-item"><div class="checkbox"></div><p>O SDR sabe criar o grupo ainda durante a ligação e confirmar a entrada do lead em tempo real.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>O padrão de nome do grupo está definido como Diagnóstico Ousen - [DD/MM] - [Horário] 🚀.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>A foto oficial da Ousen está pronta para ser usada no grupo.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>O especialista sabe exatamente quando entrar e qual mensagem enviar no grupo.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>O link do podcast ou conteúdo de bastidor já está separado para uso imediato.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>Existe rotina clara para o follow-up D-1 e para a mensagem da manhã da reunião.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>A foto do especialista com o material aberto pode ser produzida no padrão esperado.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>O link da reunião é enviado com antecedência e o especialista dispara a mensagem final no horário exato.</p></div>
+          <div class="check-item"><div class="checkbox"></div><p>O time está alinhado para nunca sugerir remarcação de forma preventiva nem usar a palavra imprevisto nas confirmações.</p></div>
+        </div>
+
+        <div class="closing-card">
+          <p>A Ousen não trata no-show como detalhe operacional. Trata como problema de percepção, processo e execução. Quando a cadência é aplicada com intenção, a presença deixa de depender de sorte e passa a depender de método.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="cta">
+      <div class="container">
+        <div class="cta-box">
+          <span class="cta-badge">Ousen · implementação com processo</span>
+          <h2>CADÊNCIA BOA NO PAPEL É INÍCIO.<br><span class="accent">EXECUÇÃO CONSISTENTE É O QUE GERA RESULTADO.</span></h2>
+          <p>
+            Este material já está adaptado para a identidade e para a lógica comercial da Ousen. Agora é só plugar seus links reais, sua logo oficial, seus contatos e colocar para rodar dentro da operação.
+          </p>
+          <div class="hero-cta" style="justify-content:center; margin-bottom:0;">
+            <a class="btn btn-primary" href="https://wa.me/SEUNUMERO" target="_blank">QUERO FALAR COM A OUSEN</a>
+            <a class="btn btn-secondary" href="#top">VOLTAR AO TOPO</a>
+          </div>
+
+          <div class="cta-proof">
+            <div><strong>07</strong><span>etapas documentadas</span></div>
+            <div><strong>100%</strong><span>adaptado para Ousen</span></div>
+            <div><strong>01</strong><span>página pronta para editar</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div class="footer-logo">
+        <img src="ousenlogo.png" alt="Ousen">
+      </div>
+      <div class="footer-copy">© 2026 Ousen · Cadência Anti No-Show · Todos os direitos reservados</div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.check-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('done');
+        const box = item.querySelector('.checkbox');
+        box.textContent = item.classList.contains('done') ? '✓' : '';
+      });
+    });
+  </script>
+</body>
+</html>
